@@ -122,7 +122,7 @@ public class panel_manage_passenger extends javax.swing.JPanel {
         txt_email.setText("");
     }
     
-    public void searchFlights() {
+public void searchFlights() {
     // Ambil input pencarian dari satu text field
     String searchInput = txt_search.getText().trim();
 
@@ -131,9 +131,7 @@ public class panel_manage_passenger extends javax.swing.JPanel {
     model.setRowCount(0); // Bersihkan tabel sebelum menampilkan hasil baru
 
     // Query pencarian fleksibel menggunakan klausa LIKE
-    String query = "SELECT flight_code, flight_source, destination, flight_date " +
-                   "FROM flight " +
-                   "WHERE flight_source LIKE ? OR destination LIKE ? OR flight_date LIKE ?";
+    String query = "SELECT passport, name_user, address, mobile_number, email FROM passenger WHERE passport LIKE ? OR name_user LIKE ? OR address LIKE ? OR mobile_number LIKE ? OR email LIKE ?";
 
     try (Connection conn = database.getConnection();
          PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -142,16 +140,19 @@ public class panel_manage_passenger extends javax.swing.JPanel {
         stmt.setString(1, searchPattern);
         stmt.setString(2, searchPattern);
         stmt.setString(3, searchPattern);
+        stmt.setString(4, searchPattern);
+        stmt.setString(5, searchPattern);
 
         ResultSet rs = stmt.executeQuery();
         while (rs.next()) {
-            String flightCode = rs.getString("flight_code");
-            String flightSource = rs.getString("flight_source");
-            String flightDestination = rs.getString("destination");
-            String flightDate = rs.getString("flight_date");
+            String passport = rs.getString("passport");
+            String name_user = rs.getString("name_user");
+            String address = rs.getString("address");
+            String mobile_number = rs.getString("mobile_number");
+            String email = rs.getString("email");
 
             // Tambahkan data ke model tabel
-            model.addRow(new Object[]{flightCode, flightSource, flightDestination, flightDate});
+            model.addRow(new Object[]{passport, name_user, address, mobile_number, email});
         }
     } catch (SQLException e) {
         System.err.println("Error: " + e.getMessage());
